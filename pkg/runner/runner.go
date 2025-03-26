@@ -36,7 +36,7 @@ type Runner struct {
 	rateLimitMap   map[string]time.Duration
 	entryTasksChan chan types.EntryTask
 	restartChan    chan struct{}
-	resultChan     chan<- string
+	domainsChan    chan<- string
 }
 
 /*
@@ -49,11 +49,11 @@ type Runner struct {
 
 */
 
-func NewRunner(resultChan chan<- string) (*Runner, error) {
+func NewRunner(domainsChan chan<- string) (*Runner, error) {
 	runner := &Runner{
 		rootDomains: make(map[string]bool),
 		restartChan: make(chan struct{}),
-		resultChan:  resultChan,
+		domainsChan: domainsChan,
 	}
 
 	var err error
@@ -69,12 +69,12 @@ func NewRunner(resultChan chan<- string) (*Runner, error) {
 }
 
 func (r *Runner) AddRootDomain(rootDomain string) {
-
+	r.rootDomains[rootDomain] = true
 	r.restartChan <- struct{}{} // each time a root domain is added we need to restart the scan
 }
 
 func (r *Runner) RemoveRootDomain(rootDomain string) {
-
+	delete(r.rootDomains, rootDomain)
 	r.restartChan <- struct{}{} // each time a root domain is removed we need to restart the scan
 }
 
@@ -303,12 +303,12 @@ func (r *Runner) logCertInfo(entry *ct.RawLogEntry) {
 
 	if utils.IsSubdomain(parsedEntry.X509Cert.Subject.CommonName, r.rootDomains) {
 		//fmt.Println(parsedEntry.X509Cert.Subject.CommonName)
-		r.resultChan <- parsedEntry.X509Cert.Subject.CommonName
+		r.domainsChan <- parsedEntry.X509Cert.Subject.CommonName
 	}
 	for _, domain := range parsedEntry.X509Cert.DNSNames {
 		if utils.IsSubdomain(domain, r.rootDomains) {
 			//fmt.Println(domain)
-			r.resultChan <- domain
+			r.domainsChan <- domain
 		}
 	}
 
@@ -323,12 +323,12 @@ func (r *Runner) logPrecertInfo(entry *ct.RawLogEntry) {
 
 	if utils.IsSubdomain(parsedEntry.Precert.TBSCertificate.Subject.CommonName, r.rootDomains) {
 		//fmt.Println(parsedEntry.Precert.TBSCertificate.Subject.CommonName)
-		r.resultChan <- parsedEntry.Precert.TBSCertificate.Subject.CommonName
+		r.domainsChan <- parsedEntry.Precert.TBSCertificate.Subject.CommonName
 	}
 	for _, domain := range parsedEntry.Precert.TBSCertificate.DNSNames {
 		if utils.IsSubdomain(domain, r.rootDomains) {
 			//fmt.Println(domain)
-			r.resultChan <- domain
+			r.domainsChan <- domain
 		}
 	}
 }
