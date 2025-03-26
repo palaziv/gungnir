@@ -1,8 +1,9 @@
-module github.com/g0ldencybersec/gungnir
+module github.com/palaziv/gungnir
 
 go 1.21
 
 require (
+	github.com/g0ldencybersec/gungnir v1.2.0
 	github.com/google/certificate-transparency-go v1.1.8
 	github.com/google/uuid v1.6.0
 )

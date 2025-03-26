@@ -1,3 +1,5 @@
+github.com/g0ldencybersec/gungnir v1.2.0 h1:N1a2Qc0hvCMhK7lUVw33shHS3enSU9gOVAx4ttDk1wk=
+github.com/g0ldencybersec/gungnir v1.2.0/go.mod h1:mm/+zWM9GxTevUJ1yvMfLIDkklEIVbrzhhy5b8fnZRY=
 github.com/go-logr/logr v1.4.1 h1:pKouT5E8xu9zeFC39JXRDukb6JFQPXM5p5I91188VAQ=
 github.com/go-logr/logr v1.4.1/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/google/certificate-transparency-go v1.1.8 h1:LGYKkgZF7satzgTak9R4yzfJXEeYVAjV6/EAEJOf1to=
