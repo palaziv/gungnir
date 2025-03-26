@@ -49,11 +49,15 @@ type Runner struct {
 
 */
 
-func NewRunner(domainsChan chan<- string) (*Runner, error) {
+func NewRunner(domainsChan chan<- string, rootDomains []string) (*Runner, error) {
 	runner := &Runner{
 		rootDomains: make(map[string]bool),
 		restartChan: make(chan struct{}),
 		domainsChan: domainsChan,
+	}
+
+	for _, rd := range rootDomains {
+		runner.rootDomains[rd] = true
 	}
 
 	var err error
